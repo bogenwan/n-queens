@@ -12,56 +12,75 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
-
-
-
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
-  var board = new Board({n: n});
-  var numberOfRooks = n;
+  var solution = new Board({n: n});
+  // quick solution draw diagonal without checking for conflicts
+  // for (var i = 0; i < n; i++) {
+  //   solution.togglePiece(i, i);
+  // }
 
-  var helper = function(board) {
-    var rows = board.rows();
-    // iterate through all rows on board
-    for (var i = 0; i < rows.length; i++) {
-      // iterate through all positions in row
-      for (var j = 0; j < rows[i].length; j++) {
-        // check if position already has a rook
-        if (rows[i][j] === 0) {
-          // create new board with toggled piece
-          var newBoard = board.togglePiece(i, j);
-          // check if conflicts after adding new piece
-          if (newBoard.hasAnyRooksConflicts) {
-            // toggle off if it has a conflict
-            newBoard.togglePiece(i, j);
-          } else {
-            // if no conflict after adding new piece, recall function with new board
-            helper(newBoard);
-          }
+  // check all spots on board and toggle if no conflict
+  for (var rows = 0; rows < n; rows++) {
+    for (var columns = 0; columns < n; columns++) {
+      if (solution.rows()[rows][columns] === 0) {
+        solution.togglePiece(rows, columns);
+        if (solution.hasAnyRooksConflicts()) {
+          solution.togglePiece(rows, columns);
         }
       }
     }
-  };
-
-  helper(board);
-
-
-
-
-  // iterate through each row
-    // toggle first pieces
-    // toggle second piece
-    // check if has conflict
-        // if yes, toggle back 2nd piece
-        // if no, continue to next piece
+  }
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  return solution.rows();
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var initialBoard = new Board({n: n});
+  var solutionCount = 0;
+  // var rowIndex = 0;
+  // var colIndex = 0;
+
+  var helper = function(board) {
+    board.findNRooksSolution(n);
+
+    // // var rows = board.rows();
+    // // iterate through all rows on board
+    // for (var row = rowIndex; row < n; row++) {
+    //   // iterate through all positions in row
+    //   for (var col = colIndex; col < n; col++) {
+    //     // check if position already has a rook
+    //     if (board.rows()[row][col] === 1) {
+    //       rowIndex++;
+    //       // colIndex++;
+    //     } else {
+    //       // toggle piece if spot is vacant
+    //       board.togglePiece(row, col);
+    //       // check if conflicts
+    //       if (board.hasAnyRooksConflicts()) {
+    //         // if conflicts, toggle back
+    //         board.togglePiece(row, col);
+    //       }
+    //       // create new board with toggled piece
+    //       var newBoard = board;
+    //       // if no conflict after adding new piece, recall function with new board
+    //       helper(newBoard, rowIndex, colIndex, n);
+    //     }
+    //   }
+    // }
+    // return newBoard;
+  };
+
+  // if (n === 1) {
+  //   solution.togglePiece(0, 0);
+  //   return solution.rows();
+  // } else {
+
+  // }
+
+  helper(initialBoard);
+  // helper(initialBoard, rowIndex, colIndex, n);
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
