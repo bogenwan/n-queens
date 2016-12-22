@@ -17,6 +17,43 @@
 
 window.findNRooksSolution = function(n) {
   var solution = undefined; //fixme
+  var board = new Board({n: n});
+  var numberOfRooks = n;
+
+  var helper = function(board) {
+    var rows = board.rows();
+    // iterate through all rows on board
+    for (var i = 0; i < rows.length; i++) {
+      // iterate through all positions in row
+      for (var j = 0; j < rows[i].length; j++) {
+        // check if position already has a rook
+        if (rows[i][j] === 0) {
+          // create new board with toggled piece
+          var newBoard = board.togglePiece(i, j);
+          // check if conflicts after adding new piece
+          if (newBoard.hasAnyRooksConflicts) {
+            // toggle off if it has a conflict
+            newBoard.togglePiece(i, j);
+          } else {
+            // if no conflict after adding new piece, recall function with new board
+            helper(newBoard);
+          }
+        }
+      }
+    }
+  };
+
+  helper(board);
+
+
+
+
+  // iterate through each row
+    // toggle first pieces
+    // toggle second piece
+    // check if has conflict
+        // if yes, toggle back 2nd piece
+        // if no, continue to next piece
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
